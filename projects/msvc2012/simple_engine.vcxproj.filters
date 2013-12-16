@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{e9cf0ed0-64ef-4267-9738-79bdd98a47e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{3e1d4de9-f339-4b40-adb0-b6aac50f2ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\GLES2">
+      <UniqueIdentifier>{0819433f-dbaf-4646-b3f0-5031d0af8b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GLES2">
+      <UniqueIdentifier>{6689f6d2-d3bd-412a-b086-4d1e89689fe6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\application.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\color.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\prerequisites.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\render_system.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\render_target.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\render_window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\GLES2Context.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\GLES2Prerequisites.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\GLES2Support.h">
+      <Filter>include\GLES2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\render_system.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_target.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\render_window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\GLES2\GLES2Context.cpp">
+      <Filter>src\GLES2</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
