@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{584f8538-a1fc-430b-9ea8-495691d062b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4945f086-a08a-4166-856c-dd7c9d13a590}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\engine_main\src\app.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\app_win32.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\factory_manager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\render_system.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\render_target.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\gles2_render_system.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\engine_main\include\app.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\app_win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\color.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\factory_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\macros.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\prerequisites.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\render_system.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\render_target.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\gles2_render_system.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

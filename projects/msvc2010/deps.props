@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <BASE_DIR>$(SolutionDir)../../</BASE_DIR>
+    <DEP_DIR>$(BASE_DIR)deps/</DEP_DIR>
+    <ENGINE_MAIN_DIR>$(BASE_DIR)engine_main/</ENGINE_MAIN_DIR>
+    <INCLUDE_DIR>$(ENGINE_MAIN_DIR)include/</INCLUDE_DIR>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(WindowsSdkDir)include;$(INCLUDE_DIR);$(DEP_DIR)boost/;$(DEP_DIR)EGL/include;$(DEP_DIR)GLES2/include</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DEP_DIR)GLES2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="BASE_DIR">
+      <Value>$(BASE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="DEP_DIR">
+      <Value>$(DEP_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ENGINE_MAIN_DIR">
+      <Value>$(ENGINE_MAIN_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="INCLUDE_DIR">
+      <Value>$(INCLUDE_DIR)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
