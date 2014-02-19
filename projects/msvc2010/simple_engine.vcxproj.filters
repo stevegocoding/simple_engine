@@ -7,6 +7,12 @@
     <Filter Include="src">
       <UniqueIdentifier>{4945f086-a08a-4166-856c-dd7c9d13a590}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\config">
+      <UniqueIdentifier>{11d27b43-7090-4aad-bc6a-cca4cac89f84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\config">
+      <UniqueIdentifier>{bc2922a2-9cb4-442a-b889-25ad9ae6808b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\engine_main\src\app.cpp">
@@ -27,6 +33,21 @@
     <ClCompile Include="..\..\engine_main\src\gles2_render_system.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\input_device.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\config\compiler.cpp">
+      <Filter>src\config</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\core_event.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\input_manager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\input_manager_win32.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\engine_main\include\app.h">
@@ -36,9 +57,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine_main\include\color.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine_main\include\event.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine_main\include\factory_manager.h">
@@ -63,6 +81,36 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine_main\include\gles2_render_system.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\input_device.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\input_event_types.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\input_event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\config\compiler_gcc_.h">
+      <Filter>include\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\config\compiler_msvc_.h">
+      <Filter>include\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\config\compiler.h">
+      <Filter>include\config</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\core_event.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\input_manager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\input_manager_win32.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "GLES2/gles2_render_system.h"
+#include "gles2_render_system.h"
 
 GLES2RenderSystem::GLES2RenderSystem()
 {

@@ -1,7 +1,6 @@
 #ifndef __GLES2_RENDER_SYSTEM_H__
 #define __GLES2_RENDER_SYSTEM_H__
 
-#include "GLES2/gles2_prerequisites.h"
 #include "render_system.h"
 
 

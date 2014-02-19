@@ -63,8 +63,13 @@
   <ItemGroup>
     <ClCompile Include="..\..\engine_main\src\app.cpp" />
     <ClCompile Include="..\..\engine_main\src\app_win32.cpp" />
+    <ClCompile Include="..\..\engine_main\src\config\compiler.cpp" />
+    <ClCompile Include="..\..\engine_main\src\core_event.cpp" />
     <ClCompile Include="..\..\engine_main\src\factory_manager.cpp" />
     <ClCompile Include="..\..\engine_main\src\gles2_render_system.cpp" />
+    <ClCompile Include="..\..\engine_main\src\input_device.cpp" />
+    <ClCompile Include="..\..\engine_main\src\input_manager.cpp" />
+    <ClCompile Include="..\..\engine_main\src\input_manager_win32.cpp" />
     <ClCompile Include="..\..\engine_main\src\render_system.cpp" />
     <ClCompile Include="..\..\engine_main\src\render_target.cpp" />
   </ItemGroup>
@@ -72,14 +77,23 @@
     <ClInclude Include="..\..\engine_main\include\app.h" />
     <ClInclude Include="..\..\engine_main\include\app_win32.h" />
     <ClInclude Include="..\..\engine_main\include\color.h" />
-    <ClInclude Include="..\..\engine_main\include\event.h" />
+    <ClInclude Include="..\..\engine_main\include\config\compiler.h" />
+    <ClInclude Include="..\..\engine_main\include\config\compiler_gcc_.h" />
+    <ClInclude Include="..\..\engine_main\include\config\compiler_msvc_.h" />
+    <ClInclude Include="..\..\engine_main\include\core_event.h" />
     <ClInclude Include="..\..\engine_main\include\factory_manager.h" />
     <ClInclude Include="..\..\engine_main\include\gles2_render_system.h" />
+    <ClInclude Include="..\..\engine_main\include\input_device.h" />
+    <ClInclude Include="..\..\engine_main\include\input_event.h" />
+    <ClInclude Include="..\..\engine_main\include\input_event_types.h" />
+    <ClInclude Include="..\..\engine_main\include\input_manager.h" />
+    <ClInclude Include="..\..\engine_main\include\input_manager_win32.h" />
     <ClInclude Include="..\..\engine_main\include\macros.h" />
     <ClInclude Include="..\..\engine_main\include\platform.h" />
     <ClInclude Include="..\..\engine_main\include\prerequisites.h" />
     <ClInclude Include="..\..\engine_main\include\render_system.h" />
     <ClInclude Include="..\..\engine_main\include\render_target.h" />
+    <ClInclude Include="..\..\engine_main\include\types.h" />
     <ClInclude Include="..\..\engine_main\include\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

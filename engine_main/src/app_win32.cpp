@@ -1,10 +1,12 @@
 #include "app_win32.h"
 #include "render_system.h"
 #include "factory_manager.h"
-
+#include "input_manager_win32.h"
 #include <boost/make_shared.hpp>
 
 #if (SIMPLE_ENGINE_PLATFORM == SE_PLATFORM_WIN32)
+
+GlobalsBasePtr g_globals;
 
 Win32AppImpl::Win32AppImpl(App& app)
 	: AppImplBase(app)
@@ -228,13 +230,29 @@ AppImplPtr Win32App::_create_impl()
 
 LRESULT Win32App::_WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 { 
-	switch(uMs)
+	switch(uMsg)
 	{
 	case WM_DESTROY:
 	case WM_CLOSE: 
-		PostQuitMessage(0);
-		return 0; 
+		{		
+			PostQuitMessage(0);
+			return 0;			
+		}
+		break;
+
+	case WM_MOUSEMOVE: 
+	case WM_LBUTTONDOWN: 
+	case WM_LBUTTONUP:
+		{
+			get_app()->get_input_mgr()->
+				on_wnd_events(Win32NativeWndMsg(uMsg, lParam, wParam)); 
+		}	
+		break; 
 	}
+	
+	
+	
+	
 	return DefWindowProc(hWnd, uMsg, wParam, lParam); 
 }
 
@@ -283,6 +301,23 @@ void Win32App::_show_window()
 
 //////////////////////////////////////////////////////////////////////////
 
+void init_globals()
+{
+	if (g_globals == GlobalsBasePtr())
+	{
+		g_globals.reset(new GlobalsBase());
+	} 
+}
+
+GlobalsBasePtr get_globals()
+{
+	return g_globals; 
+}
+
+void destroy_globals()
+{
+	g_globals.reset(); 
+}
 
 int RunApp()
 {
@@ -298,7 +333,6 @@ int RunApp()
 	return result; 
 }
 
-
 /** Test App */
 App* CreateApp()
 {
@@ -311,6 +345,12 @@ App* CreateApp()
 	Win32App *app = new Win32App(settings); 
 	
 	return app; 
+}
+
+App* get_app() 
+{
+	assert(g_globals);
+	return g_globals->app; 
 }
 
 

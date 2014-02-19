@@ -4,6 +4,8 @@
 #include <boost/shared_ptr.hpp>
 #include "prerequisites.h"
 #include "platform.h"
+#include "types.h"
+#include "core_event.h"
 
 struct CreationSettings 
 {
@@ -57,7 +59,31 @@ struct AppImplBase
 typedef boost::shared_ptr<AppImplBase> AppImplPtr;
 
 
-class App 
+class App; 
+struct GlobalsBase
+{
+	GlobalsBase()
+		: app(NULL) 
+	{} 
+
+	virtual ~GlobalsBase()
+	{
+	}
+ 
+	App *app; 
+};
+typedef boost::shared_ptr<GlobalsBase> GlobalsBasePtr; 
+
+void init_globals(); 
+GlobalsBasePtr get_globals();
+void destroy_globals(); 
+
+App *get_app(); 
+
+
+class EventManager; 
+class InputManager; 
+class App : public EventListener
 { 
 public:
 	App(const CreationSettings& config);
@@ -71,15 +97,20 @@ public:
 	virtual void present(); 
 
 	bool is_running() const { return m_is_running; }
-
-	static App* GetInstance(); 
+	
+	platforminfo_ptr get_platform_info() { return m_platform_info; }
 	
 	AppImplPtr get_pimpl() { return m_pimp; };
-
-	platforminfo_ptr get_platform_info() { return m_platform_info; }
-
 	virtual AppImplPtr _create_impl() = 0;
-	
+
+	Point<short> convert_pos_device_to_screen(const Point<float>& device_pos, 
+		bool with_orientation = true);
+
+	EventManager* get_event_mgr() { return m_event_mgr; }
+	InputManager* get_input_mgr() { return m_input_mgr; }
+
+	bool on_event(const CoreEvent& e); 
+
 protected: 
 
 	static App* m_instance; 
@@ -90,11 +121,18 @@ protected:
 
 	/** Render System */
 	RenderSystem *m_render_system; 
-	platforminfo_ptr m_platform_info; 
-};
+	platforminfo_ptr m_platform_info;
 
+	/** Event Manager */
+	EventManager *m_event_mgr;
+
+	/** Input Manager */
+	InputManager *m_input_mgr; 
+}; 
 
 App* CreateApp(); 
+
+App* GetApp(); 
 
 
 #endif

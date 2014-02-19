@@ -19,6 +19,7 @@ struct Win32PlatformInfo : public PlatformInfo
 };
 typedef boost::shared_ptr<Win32PlatformInfo> win32platforminfo_ptr; 
 
+
 struct Win32AppImpl : public AppImplBase 
 {
 	Win32AppImpl(App& app); 
@@ -51,6 +52,8 @@ public:
 	int run(); 
 
 	virtual AppImplPtr _create_impl(); 
+
+	virtual bool is_enabled() const { return true; }
 
 protected:
 

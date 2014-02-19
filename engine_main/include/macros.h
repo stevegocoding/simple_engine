@@ -3,4 +3,8 @@
 
 
 
+#define SE_TOSTR2(x) #x
+#define SE_TOSTR(x) SE_TOSTR2(x) 
+
+
 #endif

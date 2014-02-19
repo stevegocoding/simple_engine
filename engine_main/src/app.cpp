@@ -8,6 +8,7 @@ App::App(const CreationSettings& config)
 	: m_is_running(false) 
 	, m_settings(config)
 	, m_render_system(NULL)
+	, m_event_mgr(NULL)
 {
 	m_instance = this; 
 }
@@ -62,6 +63,16 @@ int App::run()
 }
 
 
+Point<short> App::convert_pos_device_to_screen(const Point<float>& device_pos, bool with_orientation)
+{
+	
+	return Point<short>(); 
+}
+
+bool App::on_event(const CoreEvent& e)
+{
+	return false; 
+}
 
 
 /*

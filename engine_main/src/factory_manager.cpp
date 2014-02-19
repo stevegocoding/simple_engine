@@ -1,6 +1,6 @@
 #include "boost/make_shared.hpp"
 #include "factory_manager.h"
-#include "GLES2/gles2_render_system.h"
+#include "gles2_render_system.h"
 
 FactoryManager::FactoryManager()
 {
