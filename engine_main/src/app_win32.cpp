@@ -364,19 +364,40 @@ bool Win32App::on_event(const CoreEvent& e)
 {
 	switch (e.type)
 	{
+	/*
 	case IET_MOUSE_BTN_DOWN:
 		{
 			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(e);
 			std::cout << "Click! " << mouse_evt.m_pos.x << " , " << mouse_evt.m_pos.y << std::endl; 
 		}
+		break;
 
 	case IET_MOUSE_MOVED:
 		{
 			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(e);
 			std::cout << "Move! " << mouse_evt.m_pos.x << " , " << mouse_evt.m_pos.y << std::endl; 
 		}
-
 		break;
+	*/ 
+
+	case IET_TOUCHPAD_BEGAN:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			std::cout << "Touch Began! " << touch_evt.m_point.x << " , " << touch_evt.m_point.y << std::endl; 
+		}
+		break; 
+	case IET_TOUCHPAD_MOVED:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			std::cout << "Touch Moved! " << touch_evt.m_point.x << " , " << touch_evt.m_point.y << std::endl; 
+		}
+		break; 
+	case IET_TOUCHPAD_ENDED:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			std::cout << "Touch Ended! " << touch_evt.m_point.x << " , " << touch_evt.m_point.y << std::endl; 
+		}
+		break; 
 	}
 	
 	return App::on_event(e);
