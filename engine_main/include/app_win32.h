@@ -31,7 +31,7 @@ struct Win32AppImpl : public AppImplBase
 	
 	int _create_native_wnd(const CreationSettings& settings);
 	int _create_gles_context(const CreationSettings& settings);
-
+	
 	int wnd_left; 
 	int wnd_top;
 	int wnd_width;
@@ -49,6 +49,9 @@ public:
 
 	static LRESULT CALLBACK _WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam );
 
+	virtual int init();
+	virtual void destroy(); 
+
 	int run(); 
 
 	virtual AppImplPtr _create_impl(); 
@@ -57,7 +60,11 @@ public:
 
 protected:
 
-
+	int _create_event_mgr();
+	void _destroy_event_mgr(); 
+	
+	int _create_input_mgr();
+	void _destroy_input_mgr(); 
 	
 private: 
 	bool _pump_events(); 

@@ -43,6 +43,7 @@ typedef boost::shared_ptr<PlatformInfo> platforminfo_ptr;
 class App;
 struct AppImplBase
 {
+public:
 	AppImplBase(App& app)
 		: m_app(app)
 	{}
@@ -53,7 +54,8 @@ struct AppImplBase
 	virtual int init(const CreationSettings& settings) = 0; 
 	virtual void destroy() = 0;
 	virtual void update() = 0; 
-	
+
+protected: 	
 	App& m_app; 
 }; 
 typedef boost::shared_ptr<AppImplBase> AppImplPtr;

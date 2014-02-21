@@ -9,6 +9,7 @@ App::App(const CreationSettings& config)
 	, m_settings(config)
 	, m_render_system(NULL)
 	, m_event_mgr(NULL)
+	, m_input_mgr(NULL)
 {
 	m_instance = this; 
 }

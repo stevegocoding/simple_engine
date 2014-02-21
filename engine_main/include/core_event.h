@@ -96,7 +96,7 @@ private:
 	typedef std::list<EventListenerData> EventListenerDataList; 
 	
 
-	void _reg_sys_events_type(int type, size_t size, std::string& event_name = std::string("")); 
+	void _reg_sys_events_type(int type, size_t size, const std::string& event_name); 
 	
 	std::map<std::string, int> m_event_types;  
 

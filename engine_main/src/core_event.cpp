@@ -4,6 +4,16 @@
 EventManager::EventManager()
 	: m_listener_order(0)
 {
+	// Mouse events
+	register_system_event<MouseEvent>(IET_MOUSE_BTN_DOWN, "glf::IET_MOUSE_BTN_DOWN");
+	register_system_event<MouseEvent>(IET_MOUSE_BTN_UP, "glf::IET_MOUSE_BTN_UP");
+	register_system_event<MouseEvent>(IET_MOUSE_MOVED, "glf::IET_MOUSE_MOVED");
+	register_system_event<MouseEvent>(IET_MOUSE_WHEEL, "glf::IET_MOUSE_WHEEL");
+
+	//Touchpad events
+	register_system_event<TouchPadEvent>(IET_TOUCHPAD_BEGAN, "glf::IET_TOUCHPAD_BEGAN");
+	register_system_event<TouchPadEvent>(IET_TOUCHPAD_MOVED, "glf::IET_TOUCHPAD_MOVED");
+	register_system_event<TouchPadEvent>(IET_TOUCHPAD_ENDED, "glf::IET_TOUCHPAD_ENDED");	
 	
 }
 
@@ -106,12 +116,9 @@ bool EventManager::_raise_event(CoreEvent& evt)
 }
 
 
-void EventManager::_reg_sys_events_type(int type, size_t size, std::string& event_name)
+void EventManager::_reg_sys_events_type(int type, size_t size, const std::string& event_name)
 {
 	assert(size <= CoreEvent::MAX_SIZE && "Event size is too big!"); 
-
-	if (event_name.empty())
-		event_name = std::string("CoreEvent"); 
 
 	m_event_infos[type].m_name = event_name; 
 	m_event_infos[type].m_size = size;

@@ -2,6 +2,7 @@
 #include "render_system.h"
 #include "factory_manager.h"
 #include "input_manager_win32.h"
+#include "console.h"
 #include <boost/make_shared.hpp>
 
 #if (SIMPLE_ENGINE_PLATFORM == SE_PLATFORM_WIN32)
@@ -29,6 +30,8 @@ int Win32AppImpl::init(const CreationSettings& settings)
 
 	ret = _create_gles_context(settings); 
 	assert (ret == 0); 
+
+	
 	
 	return 0; 
 }
@@ -36,7 +39,7 @@ int Win32AppImpl::init(const CreationSettings& settings)
 void Win32AppImpl::destroy()
 {
 	win32platforminfo_ptr win32_platforminfo = 
-		boost::shared_static_cast<Win32PlatformInfo>(m_app.get_platform_info());
+		boost::static_pointer_cast<Win32PlatformInfo>(m_app.get_platform_info());
 	
 	ReleaseDC((HWND)win32_platforminfo->hWnd,(HDC)win32_platforminfo->nativeDisplay); 
 	DestroyWindow((HWND)win32_platforminfo->hWnd); 
@@ -109,7 +112,7 @@ int Win32AppImpl::_create_native_wnd(const CreationSettings& settings)
 
 	// Note: We delay showing the window until after Initialization() succeeds
 	// Otherwise, an unsightly, empty window briefly appears during initialization
-	win32platforminfo_ptr win32_platforminfo = boost::shared_static_cast<Win32PlatformInfo>(m_app.get_platform_info());
+	win32platforminfo_ptr win32_platforminfo = boost::static_pointer_cast<Win32PlatformInfo>(m_app.get_platform_info());
 	
 	win32_platforminfo->hWnd = hParentWnd;
 	win32_platforminfo->hInst = hInstance; 
@@ -120,7 +123,7 @@ int Win32AppImpl::_create_native_wnd(const CreationSettings& settings)
 
 int Win32AppImpl::_create_gles_context(const CreationSettings& settings)
 {
-	win32platforminfo_ptr win32_platforminfo = boost::shared_static_cast<Win32PlatformInfo>(m_app.get_platform_info());
+	win32platforminfo_ptr win32_platforminfo = boost::static_pointer_cast<Win32PlatformInfo>(m_app.get_platform_info());
 	
 	/** Get EGL display */
 	EGLDisplay egl_display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
@@ -219,8 +222,26 @@ Win32App::Win32App(const CreationSettings& settings)
 
 Win32App::~Win32App()
 {
-	
+
 }
+
+int Win32App::init()
+{
+	App::init(); 
+	_create_event_mgr(); 
+	_create_input_mgr(); 
+
+	return 0; 
+}
+
+void Win32App::destroy()
+{
+	App::destory(); 
+	
+	_destroy_input_mgr(); 
+	_destroy_event_mgr(); 
+}
+
 
 AppImplPtr Win32App::_create_impl() 
 {
@@ -249,10 +270,7 @@ LRESULT Win32App::_WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 		}	
 		break; 
 	}
-	
-	
-	
-	
+
 	return DefWindowProc(hWnd, uMsg, wParam, lParam); 
 }
 
@@ -292,11 +310,40 @@ int Win32App::run()
 void Win32App::_show_window()
 {
 	win32platforminfo_ptr win32_platforminfo = 
-		boost::shared_static_cast<Win32PlatformInfo>(get_platform_info());
+		boost::static_pointer_cast<Win32PlatformInfo>(get_platform_info());
 	
 	ShowWindow(win32_platforminfo->hWnd, TRUE);
 	SetForegroundWindow(win32_platforminfo->hWnd); 
 	SetFocus(win32_platforminfo->hWnd); 
+}
+
+
+int Win32App::_create_event_mgr()
+{
+	assert(!m_event_mgr);
+	m_event_mgr = new EventManager(); 
+
+	return 0; 
+}
+
+int Win32App::_create_input_mgr()
+{
+	assert(!m_input_mgr); 
+	m_input_mgr = new InputManagerWin32(); 
+
+	return 0;
+}
+
+void Win32App::_destroy_event_mgr()
+{
+	assert(m_event_mgr); 
+	SAFE_DEL(m_event_mgr); 
+}
+
+void Win32App::_destroy_input_mgr()
+{
+	assert(m_input_mgr); 
+	SAFE_DEL(m_input_mgr); 
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -322,6 +369,8 @@ void destroy_globals()
 int RunApp()
 {
 	App *win32_app = CreateApp(); 
+
+	get_globals()->app = win32_app; 
 
 	int result = 0;
 	if (win32_app && win32_app->init() == 0)
@@ -360,7 +409,15 @@ int CALLBACK WinMain(
 	LPSTR       lpCmdLine,
 	int         nCmdShow) 
 {
-	int result = RunApp(); 
+	DebugConsole::open(); 
+
+	init_globals();
+
+	int result = RunApp();
+
+	destroy_globals();
+	
+	DebugConsole::shutdown(); 
 	
 	return result; 
 } 

@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\engine_main\src\input_manager_win32.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\engine_main\src\console.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\engine_main\include\app.h">
@@ -111,6 +114,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine_main\include\input_manager_win32.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\engine_main\include\console.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

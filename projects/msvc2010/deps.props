@@ -6,15 +6,19 @@
     <DEP_DIR>$(BASE_DIR)deps/</DEP_DIR>
     <ENGINE_MAIN_DIR>$(BASE_DIR)engine_main/</ENGINE_MAIN_DIR>
     <INCLUDE_DIR>$(ENGINE_MAIN_DIR)include/</INCLUDE_DIR>
+    <OUTPUT_DIR>$(BASE_DIR)build/</OUTPUT_DIR>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(OUTPUT_DIR)</OutDir>
+    <IntDir>$(OUTPUT_DIR)</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(WindowsSdkDir)include;$(INCLUDE_DIR);$(DEP_DIR)boost/;$(DEP_DIR)EGL/include;$(DEP_DIR)GLES2/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DEP_DIR)GLES2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(DEP_DIR)EGL/lib;$(DEP_DIR)GLES2/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -29,6 +33,9 @@
     </BuildMacro>
     <BuildMacro Include="INCLUDE_DIR">
       <Value>$(INCLUDE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OUTPUT_DIR">
+      <Value>$(OUTPUT_DIR)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

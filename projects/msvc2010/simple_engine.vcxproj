@@ -64,6 +64,7 @@
     <ClCompile Include="..\..\engine_main\src\app.cpp" />
     <ClCompile Include="..\..\engine_main\src\app_win32.cpp" />
     <ClCompile Include="..\..\engine_main\src\config\compiler.cpp" />
+    <ClCompile Include="..\..\engine_main\src\console.cpp" />
     <ClCompile Include="..\..\engine_main\src\core_event.cpp" />
     <ClCompile Include="..\..\engine_main\src\factory_manager.cpp" />
     <ClCompile Include="..\..\engine_main\src\gles2_render_system.cpp" />
@@ -80,6 +81,7 @@
     <ClInclude Include="..\..\engine_main\include\config\compiler.h" />
     <ClInclude Include="..\..\engine_main\include\config\compiler_gcc_.h" />
     <ClInclude Include="..\..\engine_main\include\config\compiler_msvc_.h" />
+    <ClInclude Include="..\..\engine_main\include\console.h" />
     <ClInclude Include="..\..\engine_main\include\core_event.h" />
     <ClInclude Include="..\..\engine_main\include\factory_manager.h" />
     <ClInclude Include="..\..\engine_main\include\gles2_render_system.h" />
