@@ -232,6 +232,14 @@ void InputDevice::update_cursor(uint idx, int x, int y)
 
 ////////////////////////////////////////////////////////////////////////// 
 
+Mouse::Mouse()
+{
+	// .Set(GLF_ASIZEOF(mButtons), mButtons);
+	for (int i = 0; i < BTN_COUNT; ++i)
+		m_btns.push_back(m_mouse_btns[i]);
+	m_cursors.push_back(m_cursor); 
+}
+
 void Mouse::raise_move_event(float x, float y)
 {
 	MouseEvent evt(IET_MOUSE_MOVED);

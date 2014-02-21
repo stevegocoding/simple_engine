@@ -51,12 +51,15 @@ public:
 
 	virtual int init();
 	virtual void destroy(); 
-
+	virtual void update();
+	
 	int run(); 
 
 	virtual AppImplPtr _create_impl(); 
 
 	virtual bool is_enabled() const { return true; }
+
+	virtual bool on_event(const CoreEvent& e); 
 
 protected:
 

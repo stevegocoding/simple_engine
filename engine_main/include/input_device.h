@@ -141,6 +141,8 @@ public:
 		BTN_COUNT
 	};
 
+	Mouse(); 
+
 	virtual bool presend_event(CoreEvent& event);
 	virtual void reset_frame(); 
 
@@ -192,7 +194,7 @@ public:
 	
 private:
 	
-	SimpleButton m_btns[BTN_COUNT]; 
+	SimpleButton m_mouse_btns[BTN_COUNT]; 
 	Cursor m_cursor; 
 	float m_wheel; 
 };

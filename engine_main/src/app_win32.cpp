@@ -4,6 +4,7 @@
 #include "input_manager_win32.h"
 #include "console.h"
 #include <boost/make_shared.hpp>
+#include <iostream>
 
 #if (SIMPLE_ENGINE_PLATFORM == SE_PLATFORM_WIN32)
 
@@ -217,7 +218,7 @@ Win32App::Win32App(const CreationSettings& settings)
 	: App(settings)
 {
 	m_pimp = _create_impl(); 
-	m_platform_info = boost::make_shared<Win32PlatformInfo>();
+	m_platform_info = boost::make_shared<Win32PlatformInfo>(); 
 }
 
 Win32App::~Win32App()
@@ -231,6 +232,8 @@ int Win32App::init()
 	_create_event_mgr(); 
 	_create_input_mgr(); 
 
+	m_event_mgr->add_listener(this); 
+
 	return 0; 
 }
 
@@ -242,6 +245,12 @@ void Win32App::destroy()
 	_destroy_event_mgr(); 
 }
 
+void Win32App::update()
+{
+	App::update();
+	
+	get_event_mgr()->dispatch_events(); 
+}
 
 AppImplPtr Win32App::_create_impl() 
 {
@@ -344,6 +353,21 @@ void Win32App::_destroy_input_mgr()
 {
 	assert(m_input_mgr); 
 	SAFE_DEL(m_input_mgr); 
+}
+
+bool Win32App::on_event(const CoreEvent& e)
+{
+	switch (e.type)
+	{
+	case IET_MOUSE_BTN_DOWN:
+		{
+			std::cout << "Click!" << std::endl; 
+		}
+
+		break;
+	}
+	
+	return App::on_event(e);
 }
 
 //////////////////////////////////////////////////////////////////////////

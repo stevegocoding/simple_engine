@@ -48,7 +48,7 @@ public:
 	EventManager(); 
 	virtual ~EventManager();
 	
-	void add_listener(EventListener *listener, int priority); 
+	void add_listener(EventListener *listener, int priority = 0); 
 	
 	bool presend_event(CoreEvent& event);
 
