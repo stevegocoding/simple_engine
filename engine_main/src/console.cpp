@@ -4,10 +4,19 @@
 #include <fcntl.h>
 #include <fstream>
 
+static const WORD MAX_CONSOLE_LINES = 500; 
+
 int DebugConsole::open()
 {
+	CONSOLE_SCREEN_BUFFER_INFO console_info;
+	
 	// Create a console for this application
 	BOOL ret = AllocConsole();
+	
+	// set the screen buffer to be big enough to let us scroll text
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &console_info);
+	console_info.dwSize.Y = MAX_CONSOLE_LINES;
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE), console_info.dwSize);
 
 	// Redirect unbuffered STDOUT to the console 
 	HANDLE console_output = GetStdHandle(STD_OUTPUT_HANDLE);
