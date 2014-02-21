@@ -246,7 +246,7 @@ void Mouse::raise_move_event(float x, float y)
 	
 	evt.m_input_device = this;
 	evt.m_btn = Mouse::BTN_NONE;
-	evt.m_pos = get_app()->convert_pos_device_to_screen(Point<float>(x, y));
+	evt.m_pos = Point<short>((short)x, (short)y);
 	
 	get_app()->get_event_mgr()->post_event(evt); 
 }

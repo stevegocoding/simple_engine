@@ -3,6 +3,7 @@
 #include "factory_manager.h"
 #include "input_manager_win32.h"
 #include "console.h"
+#include "input_event.h"
 #include <boost/make_shared.hpp>
 #include <iostream>
 
@@ -249,7 +250,11 @@ void Win32App::update()
 {
 	App::update();
 	
-	get_event_mgr()->dispatch_events(); 
+	if (m_input_mgr)
+		m_input_mgr->update_frame();
+
+	if (m_event_mgr)
+		m_event_mgr->dispatch_events(); 
 }
 
 AppImplPtr Win32App::_create_impl() 
@@ -361,7 +366,14 @@ bool Win32App::on_event(const CoreEvent& e)
 	{
 	case IET_MOUSE_BTN_DOWN:
 		{
-			std::cout << "Click!" << std::endl; 
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(e);
+			std::cout << "Click! " << mouse_evt.m_pos.x << " , " << mouse_evt.m_pos.y << std::endl; 
+		}
+
+	case IET_MOUSE_MOVED:
+		{
+			const MouseEvent& mouse_evt = static_cast<const MouseEvent&>(e);
+			std::cout << "Move! " << mouse_evt.m_pos.x << " , " << mouse_evt.m_pos.y << std::endl; 
 		}
 
 		break;
