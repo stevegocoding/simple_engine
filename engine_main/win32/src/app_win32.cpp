@@ -13,6 +13,10 @@ GlobalsBasePtr g_globals;
 
 Win32AppImpl::Win32AppImpl(App& app)
 	: AppImplBase(app)
+	, wnd_left(0)
+	, wnd_top(0)
+	, wnd_width(0)
+	, wnd_height(0)
 {
 	
 }
@@ -240,7 +244,7 @@ int Win32App::init()
 
 void Win32App::destroy()
 {
-	App::destory(); 
+	App::destroy(); 
 	
 	_destroy_input_mgr(); 
 	_destroy_event_mgr(); 
@@ -257,9 +261,9 @@ void Win32App::update()
 		m_event_mgr->dispatch_events(); 
 }
 
-AppImplPtr Win32App::_create_impl() 
+appimpl_ptr Win32App::_create_impl() 
 {
-	AppImplPtr pimp = AppImplPtr(new Win32AppImpl(*this)); 
+	appimpl_ptr pimp = appimpl_ptr(new Win32AppImpl(*this)); 
 	return pimp;  
 }
 
@@ -433,7 +437,7 @@ int RunApp()
 	if (win32_app && win32_app->init() == 0)
 	{
 		result = win32_app->run();
-		win32_app->destory(); 
+		win32_app->destroy(); 
 	}
 	
 	return result; 

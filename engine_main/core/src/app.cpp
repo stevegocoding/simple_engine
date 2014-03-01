@@ -22,20 +22,21 @@ int App::init()
 {
 	//FactoryManager::GetInstance()->initialize(); 
 	
-	int ret = m_pimp->init(m_settings); 
-	return ret;
+	// int ret = m_pimp->init(m_settings); 
+	
+	return 0;
 }
 
-void App::destory()
+void App::destroy()
 { 
-	m_pimp->destroy();
+	// m_pimp->destroy();
 	
 	// FactoryManager::GetInstance()->shutdown();
 }
 
 void App::update()
 {
-	m_pimp->update(); 
+	// m_pimp->update(); 
 }
 
 void App::render_frame()

@@ -9,7 +9,7 @@
 typedef	signed long long int64; 
 typedef	unsigned long long uint64; 
 
-typedef __SIZE_TYPE_ size_t; 
+typedef __SIZE_TYPE__ size_t; 
 
 
 #endif

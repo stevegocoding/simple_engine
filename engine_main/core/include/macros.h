@@ -7,5 +7,7 @@
 #define SAFE_DEL(x)					if (x) { delete x; x = 0; }
 #define SAFE_DEL_ARRAY(x)			if (x) { delete[] x; x = 0; }
 
+#define RESULT_OK	0
+
 
 #endif

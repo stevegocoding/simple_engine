@@ -2,6 +2,7 @@
 #define __APPLICATION_H__
 
 #include <boost/shared_ptr.hpp>
+#include <string>
 #include "prerequisites.h"
 #include "platform.h"
 #include "types.h"
@@ -18,6 +19,7 @@ struct CreationSettings
 		, wnd_height(DEFAULT_VALUE)
 		, wnd_title("AppWindow")
 		, depthbuf_size(16)
+		, pixel_size(16)
 		, wait_vsync(false)
 	{
 	}
@@ -27,10 +29,11 @@ struct CreationSettings
 	int wnd_pos_y;
 	unsigned int wnd_width; 
 	unsigned int wnd_height; 
-	std::string wnd_title; 
+	std::string wnd_title;
 	
 	/** Rendering Settings */ 
 	int depthbuf_size;
+	int pixel_size; 
 	bool wait_vsync; 
 };
  
@@ -58,7 +61,7 @@ public:
 protected: 	
 	App& m_app; 
 }; 
-typedef boost::shared_ptr<AppImplBase> AppImplPtr;
+typedef boost::shared_ptr<AppImplBase> appimpl_ptr;
 
 
 class App; 
@@ -92,39 +95,37 @@ public:
 	virtual ~App(); 
 
 	virtual int init();
-	virtual void destory();
+	virtual void destroy();
 	virtual int run();
 	virtual void update();
 	virtual void render_frame(); 
 	virtual void present(); 
 
-	bool is_running() const { return m_is_running; }
-	
+	bool is_running() const { return m_is_running; } 
 	platforminfo_ptr get_platform_info() { return m_platform_info; }
-	
-	AppImplPtr get_pimpl() { return m_pimp; };
-	virtual AppImplPtr _create_impl() = 0;
-
-	Point<short> convert_pos_device_to_screen(const Point<float>& device_pos, 
-		bool with_orientation = true);
-
 	EventManager* get_event_mgr() { return m_event_mgr; }
 	InputManager* get_input_mgr() { return m_input_mgr; }
 
-	bool on_event(const CoreEvent& e); 
+	Point<short> convert_pos_device_to_screen(const Point<float>& device_pos, 
+		bool with_orientation = true); 
+	
+	virtual bool is_enabled() const { return true; }
+	virtual bool on_event(const CoreEvent& e); 
 
 protected: 
-
+	
+	virtual platforminfo_ptr _create_platform_info() = 0; 
+	
 	static App* m_instance; 
 
 	bool m_is_running; 
-	AppImplPtr m_pimp; 
+	appimpl_ptr m_pimp; 
 	CreationSettings m_settings;
-
-	/** Render System */
-	RenderSystem *m_render_system; 
 	platforminfo_ptr m_platform_info;
 
+	/** Render System */
+	RenderSystem *m_render_system;
+	
 	/** Event Manager */
 	EventManager *m_event_mgr;
 

@@ -6,7 +6,7 @@
 	#define SE_COMPILER msvc
 	#define SE_COMPILER_MSVC 1
 
-#elif defined(GCC) || defined(__GCC__)
+#elif defined(GCC) || defined(__GCC__) || defined(__ANDROID__)
 
 	#define SE_COMPILER gcc
 	#define SE_COMPILER_GCC 1 

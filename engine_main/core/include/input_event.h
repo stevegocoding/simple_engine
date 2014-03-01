@@ -2,7 +2,7 @@
 #define __INPUT_EVENT_H__
 
 #include "config.h"
-#include "event.h"
+#include "core_event.h"
 #include "types.h"
 #include "input_device.h"
 

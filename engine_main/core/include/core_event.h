@@ -35,8 +35,8 @@ struct CoreEvent
 class EventListener 
 {
 public:
+
 	virtual bool on_event(const CoreEvent& e) = 0;
-	
 	virtual bool is_enabled() const = 0; 
 
 };
@@ -59,7 +59,7 @@ public:
 	template <typename T>
 	void register_system_event(int type, const std::string& event_name)
 	{
-		_reg_sys_events_type(type, sizeof(T), event_name); 
+		_reg_sys_events_type(type, sizeof(T), event_name);
 	}
 
 private:

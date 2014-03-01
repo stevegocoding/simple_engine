@@ -25,3 +25,17 @@ ipch/
 [Bb]in
 [Dd]ebug*/
 [Rr]elease*/
+build/
+
+# Ignore Android SDK, NDK, Eclipse plugin and ANT files
+libs/
+bin/
+obj/
+assets/
+.classpath
+.project
+.cproject
+local.properties
+
+# Ignore files build by linux
+*.o

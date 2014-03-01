@@ -55,7 +55,7 @@ public:
 	
 	int run(); 
 
-	virtual AppImplPtr _create_impl(); 
+	virtual appimpl_ptr _create_impl(); 
 
 	virtual bool is_enabled() const { return true; }
 
