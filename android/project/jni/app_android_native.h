@@ -31,8 +31,17 @@ public:
 	
 private:
 	platforminfo_ptr _create_platform_info(); 
+	void _create_event_mgr(); 
+	void _create_input_mgr(); 
+	
+	void _destroy_event_mgr(); 
+	void _destroy_input_mgr();
+	
 	int _create_gles_context(const CreationSettings& settings);
 	EGLConfig _choose_egl_cfg(EGLDisplay display, EGLConfig *configs, int num_configs);
+
+	
+
 };
 
 

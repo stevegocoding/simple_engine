@@ -20,7 +20,7 @@ public:
 	
 	void add_updated_device(InputDevice *device); 
 
-	virtual void on_wnd_events(NativeWndMsg& wnd_msg) = 0; 
+	virtual void on_wnd_events(NativeWndMsg& wnd_msg) {}
 
 protected: 
 	std::set<InputDevice*> m_update_devices; 

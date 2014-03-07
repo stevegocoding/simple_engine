@@ -6,7 +6,7 @@
 #include <GLES/gl.h>
 #include <android_native_app_glue.h>
 #include "app_android_native.h"
-#include "app.h"
+#include "input_manager_android.h"
 #include "log.h"
 
 
@@ -99,12 +99,41 @@ platforminfo_ptr AndroidNativeApp::_create_platform_info()
 
 int AndroidNativeApp::init()
 {
-	int ret = App::init();
-	return ret; 
+	App::init();
+	
+	_create_event_mgr(); 
+	_create_input_mgr();
+	
+	m_event_mgr->add_listener(this); 
+	
+	_create_gles_context(m_settings); 
+	
+	return RESULT_OK; 
+}
+
+void AndroidNativeApp::destroy()
+{
+	App::destroy();
+	
+	_destroy_input_mgr(); 
+	_destroy_event_mgr(); 
+}
+
+void AndroidNativeApp::update()
+{
+	App::update();
+	
+	if (m_input_mgr)
+		m_input_mgr->update_frame();
+
+	if (m_event_mgr)
+		m_event_mgr->dispatch_events();
 }
 
 int AndroidNativeApp::_create_gles_context(const CreationSettings& settings)
 {
+	Log::info("_create_gles_context()");
+	
 	const EGLint config_attribs_default[] = 
 	{
 		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
@@ -271,24 +300,37 @@ EGLConfig AndroidNativeApp::_choose_egl_cfg(EGLDisplay display, EGLConfig *confi
         { 
             bestConfig = config;
             minDistanceCSAA = abs(csaa - mCSAA);
-        }
+        } 
     }
     */ 
     return best_cfg; 
 }
 
-
-void AndroidNativeApp::destroy()
+void AndroidNativeApp::_create_event_mgr()
 {
-	App::destroy();
+	if (!m_event_mgr)
+	{
+		m_event_mgr = new EventManager(); 
+	}
 }
 
-void AndroidNativeApp::update()
+void AndroidNativeApp::_create_input_mgr()
 {
-	App::update();
+	if (!m_input_mgr)
+	{
+		m_input_mgr = new InputManagerAndroid();
+	}
 }
 
+void AndroidNativeApp::_destroy_event_mgr()
+{
+	SAFE_DEL(m_event_mgr); 
+}
 
+void AndroidNativeApp::_destroy_input_mgr() 
+{
+	SAFE_DEL(m_input_mgr);
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -349,7 +391,6 @@ int32_t android_on_input_event(struct android_app* and_app, AInputEvent* event)
 		return 0; 
 	
 	
-	
 	return 1; 
 }
 
@@ -360,10 +401,13 @@ void android_main(struct android_app *and_app)
 	// Initialize the globals
 	init_globals();
 	
+	/* 
 	App *app = CreateApp();
 	get_globals()->app = app;
 	
 	g_android_app = and_app; 
+	
+	Log::info("Create Application");
 
 	and_app->userData = app;
 	and_app->onAppCmd = android_on_app_cmd;
@@ -377,4 +421,6 @@ void android_main(struct android_app *and_app)
 	app->destroy(); 
 	
 	SAFE_DEL(app); 
+	
+	*/
 }

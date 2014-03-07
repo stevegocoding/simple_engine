@@ -345,3 +345,19 @@ void GamePad::raise_touch_event(InputEventTypes evt_type, uint touch_id, float x
 {
 	m_touchpad.raise_touch_event(this, 0, evt_type, touch_id, x, y);
 }
+
+////////////////////////////////////////////////////////////////////////// 
+
+AndroidController::AndroidController()
+{
+	Cursor cursors[AndroidCursorsNum];
+	m_ctrl_cursors = CursorsArray(cursors, cursors+AndroidCursorsNum);
+	
+	SimpleButton buttons[AndroidController::BTN_COUNT];
+	m_ctrl_buttons = ButtonsArray(buttons, buttons+AndroidController::BTN_COUNT);
+	
+	m_cursors.swap(m_ctrl_cursors); 
+	m_btns.swap(m_ctrl_buttons);
+	
+	m_touchpad = m_tpad; 
+}

@@ -213,5 +213,26 @@ public:
 };
 
 
+class AndroidController : public GamePad
+{
+public:
+	static const int AndroidCursorsNum = 4;
+	
+	enum Joy
+	{
+		BTN_NONE = -1,
+		BTN_VOLUP, BTN_VOLDOWN, BTN_CLOSE, BTN_LOCK, 
+		BTN_COUNT
+	};
+	
+	AndroidController();
+	
+private: 
+	
+	CursorsArray m_ctrl_cursors; 
+	ButtonsArray m_ctrl_buttons;
+	TouchPad m_tpad;
+};
+
 
 #endif 
