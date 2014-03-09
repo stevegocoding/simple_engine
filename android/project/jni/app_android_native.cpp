@@ -9,9 +9,7 @@
 #include "input_manager_android.h"
 #include "log.h"
 
-
-GlobalsBasePtr g_globals;
-struct android_app *g_android_app = NULL;  
+GlobalsBasePtr g_globals;  
 
 static int s_red_size = 0; 
 static int s_green_size = 0; 
@@ -22,6 +20,16 @@ static int s_stencil_size = 0;
 static int s_csaa = 0; 
 static boost::shared_array<int> s_val = boost::shared_array<int>(new int[1]); 
 
+AndroidGlobalsPtr cast_android_globals(GlobalsBasePtr globals)
+{
+	return boost::static_pointer_cast<AndroidGlobals>(get_globals()); 
+}
+
+AndroidPlatformInfoPtr cast_android_platform_info(platforminfo_ptr pi)
+{
+	return boost::static_pointer_cast<AndroidPlatformInfo>(pi); 
+}
+
 
 class JavaVMScope
 {
@@ -29,10 +37,12 @@ public:
 	
 	JavaVMScope()
 	{
-		if (g_android_app)
+		AndroidGlobalsPtr globals = cast_android_globals(get_globals());
+		
+		if (globals->and_app)
 		{
-			vm = g_android_app->activity->vm;
-			env = g_android_app->activity->env; 
+			vm = globals->and_app->activity->vm;
+			env = globals->and_app->activity->env; 
 			vm->AttachCurrentThread(&env, NULL); 
 		}
 	}
@@ -52,7 +62,9 @@ void get_window_infos(int& width, int& height, int& rotation)
 	JavaVMScope scope;
 	JNIEnv *env = scope.env; 
 	
-	jclass activity_class = env->GetObjectClass(g_android_app->activity->clazz); 
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals());
+	
+	jclass activity_class = env->GetObjectClass(globals->and_app->activity->clazz); 
 	jclass window_manage_class = env->FindClass("android/view/WindowManager"); 
 	jclass display_class = env->FindClass("android/view/Display"); 
 	
@@ -62,7 +74,7 @@ void get_window_infos(int& width, int& height, int& rotation)
     jmethodID getHeightID = env->GetMethodID(display_class, "getHeight", "()I");
     jmethodID getRotationID = env->GetMethodID(display_class, "getRotation", "()I");
     
-    jobject windowManager = env->CallObjectMethod(g_android_app->activity->clazz, getWindowManagerID);
+    jobject windowManager = env->CallObjectMethod(globals->and_app->activity->clazz, getWindowManagerID);
     jobject display = env->CallObjectMethod(windowManager, getDefaultDisplayID);
     width = env->CallIntMethod(display, getWidthID);
     height = env->CallIntMethod(display, getHeightID);
@@ -106,9 +118,31 @@ int AndroidNativeApp::init()
 	
 	m_event_mgr->add_listener(this); 
 	
-	_create_gles_context(m_settings); 
+	create_context();
 	
 	return RESULT_OK; 
+}
+
+int AndroidNativeApp::create_context()
+{
+	AndroidPlatformInfoPtr platform_info = cast_android_platform_info(m_platform_info);
+	if (platform_info->eglContext != EGL_NO_CONTEXT)
+		return RESULT_OK;
+			
+	int result = _create_gles_context(m_settings);
+	
+	return result; 
+}
+
+void AndroidNativeApp::destroy_context()
+{
+	/*
+	AndroidPlatformInfoPtr platform_info = cast_android_platform_info(m_platfom_info);
+	if (platform_info->eglContext != EGL_NO_CONTEXT)
+	{
+		eglMake
+	}
+	*/
 }
 
 void AndroidNativeApp::destroy()
@@ -121,31 +155,96 @@ void AndroidNativeApp::destroy()
 
 void AndroidNativeApp::update()
 {
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals()); 
+	
 	App::update();
+	
+	int ident; 
+	int events; 
+	struct android_poll_source *source;
+	
+	// Loop until all events are read, then continue to draw the next frame of animation.
+	while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0)
+	{
+		if (source) 
+		{
+			source->process(globals->and_app, source);
+		}
+		
+		// If a sensor has data, process it now
+		if (ident == LOOPER_ID_USER) 
+		{
+			
+		}
+		
+		// Check if we are exiting
+		if (globals->and_app->destroyRequested != 0) 
+		{
+			m_is_running = false;
+			return; 
+		}
+	}
 	
 	if (m_input_mgr)
 		m_input_mgr->update_frame();
 
 	if (m_event_mgr)
 		m_event_mgr->dispatch_events();
+	
+	
+}
+
+int AndroidNativeApp::run()
+{
+	Log::info("AndroidNativeApp::run()");
+
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals()); 
+	
+	m_is_running = true;
+	while (m_is_running)
+	{
+		if (globals->has_focus)
+		{
+			update();
+			present(); 
+		}
+		else
+		{
+			update(); 
+			::usleep(50*1000);
+		}
+	}
+	
+	return RESULT_OK;
+}
+
+void AndroidNativeApp::present()
+{
+	AndroidPlatformInfoPtr platform_info = cast_android_platform_info(m_platform_info); 
+	eglSwapBuffers(platform_info->eglDisplay, platform_info->eglWindowSurface);
 }
 
 int AndroidNativeApp::_create_gles_context(const CreationSettings& settings)
 {
 	Log::info("_create_gles_context()");
+
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals());
 	
 	const EGLint config_attribs_default[] = 
 	{
 		EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
 		EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, 
-		EGL_RED_SIZE, 4, 
-		EGL_GREEN_SIZE, 4, 
-		EGL_BLUE_SIZE, 4, 
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8, 
+		EGL_BLUE_SIZE, 8, 
+		EGL_ALPHA_SIZE, 8,
+		EGL_DEPTH_SIZE, 24, 
+		EGL_STENCIL_SIZE, 8,
 		EGL_NONE
 	};
 	
 	EGLint w, h, dummy, format; 
-	EGLint num_configs = 100;
+	EGLint num_configs = 1;
 	
 	EGLSurface surface; 
 	EGLContext context; 
@@ -192,14 +291,20 @@ int AndroidNativeApp::_create_gles_context(const CreationSettings& settings)
 	
 	EGLConfig selected_config = _choose_egl_cfg(display, configs, num_configs);
 	
+    /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
+     * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
+     * As soon as we picked a EGLConfig, we can safely reconfigure the
+     * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID. */
+    eglGetConfigAttrib(display, selected_config, EGL_NATIVE_VISUAL_ID, &format);
+	
 	int rotation; 
 	get_window_infos(w, h, rotation); 
 	
 	Log::info("window: %dx%d rotation=%d", w, h, rotation);
 
-	ANativeWindow_setBuffersGeometry(g_android_app->window, w, h, format);
+	ANativeWindow_setBuffersGeometry(globals->and_app->window, w, h, format);
 	
-	surface = eglCreateWindowSurface(display, selected_config, g_android_app->window, NULL); 
+	surface = eglCreateWindowSurface(display, selected_config, globals->and_app->window, NULL); 
 	
 	const EGLint context_attribs[] = 
 	{
@@ -234,7 +339,6 @@ int AndroidNativeApp::_create_gles_context(const CreationSettings& settings)
 
 EGLConfig AndroidNativeApp::_choose_egl_cfg(EGLDisplay display, EGLConfig *configs, int num_configs)
 {
-	
 	Log::info("Choosing EGL Config");
 	EGLConfig *valid_cfgs = new EGLConfig[num_configs];
 	int valid_cfg_count = 0;
@@ -339,7 +443,7 @@ void init_globals()
 {
 	if (g_globals == GlobalsBasePtr())
 	{
-		g_globals.reset(new GlobalsBase());
+		g_globals.reset(new AndroidGlobals());
 	}
 }
 
@@ -353,36 +457,124 @@ void destroy_globals()
 	g_globals.reset();
 } 
 
-App* CreateApp()
-{
-	CreationSettings settings;
-	settings.wnd_pos_x = 100; 
-	settings.wnd_pos_y = 100; 
-	settings.wnd_width = 1024; 
-	settings.wnd_height = 768; 
-
-	AndroidNativeApp *app = new AndroidNativeApp(settings); 
-	
-	return app;
-}
-
 App* get_app() 
 {
 	assert(g_globals);
 	return g_globals->app; 
 }
 
+App* CreateApp()
+{
+	CreationSettings settings;
+	settings.wnd_pos_x = 100;
+	settings.wnd_pos_y = 100;
+	settings.wnd_width = 1024;
+	settings.wnd_height = 768;
+	settings.pixel_size = 32; 
+
+	AndroidNativeApp *app = new AndroidNativeApp(settings);
+
+	return app;
+}
+
+int InitApp()
+{
+	int result = 0; 
+	App *android_app = get_globals()->app; 
+	if (android_app)
+	{
+		result = android_app->init(); 
+	}
+	return result; 
+}
+
+int RunApp()
+{	
+	int result = 0; 
+	App *android_app = get_globals()->app; 
+	if (android_app)
+	{
+		result = android_app->run(); 
+	}	
+	return result; 
+}
+
+void DestroyApp()
+{
+	int result = 0; 
+	App *android_app = get_globals()->app; 
+	if (android_app)
+	{
+		android_app->destroy(); 
+		SAFE_DEL(android_app);
+		get_globals()->app = NULL;
+	} 
+}
 
 /*=========================
  Application Command Handler 
  =========================*/
 void android_on_app_cmd(struct android_app* app, int32_t cmd) 
 {
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals()); 
+	AndroidNativeApp *and_app = (AndroidNativeApp*)app->userData; 
+	if (and_app == NULL)
+		return; 
 	
+	switch (cmd)
+	{
+		case APP_CMD_SAVE_STATE:
+		{
+			Log::info("APP_CMD_SAVE_STATE"); 
+			break; 
+		}
+		
+		case APP_CMD_INIT_WINDOW:
+		{
+			Log::info("APP_CMD_INIT_WINDOW"); 
+			if (app->window != NULL)
+			{
+				if (and_app)
+				{
+					if (!globals->is_app_initialized)
+					{
+						and_app->init();
+						globals->is_app_initialized = true; 
+					}
+					else 
+					{
+						and_app->create_context();
+					}
+				}
+			}
+			break;
+		}
+		
+		case APP_CMD_TERM_WINDOW:
+		{
+			Log::info("APP_CMD_TERM_WINDOW"); 
+			// and_app->destroy_context();
+			break;
+		}
+		
+		case APP_CMD_GAINED_FOCUS:
+        case APP_CMD_LOST_FOCUS:
+        {
+        	globals->has_focus = (cmd == APP_CMD_GAINED_FOCUS);
+        	
+        	break;
+        }
+        
+        case APP_CMD_INPUT_CHANGED:
+        {
+        	break; 
+        }
+	}
 }
 
 int32_t android_on_input_event(struct android_app* and_app, AInputEvent* event) 
 {
+	/*
 	AndroidNativeApp *app = static_cast<AndroidNativeApp*>(and_app->userData);
 	if (!app)
 		return 0; 
@@ -390,6 +582,7 @@ int32_t android_on_input_event(struct android_app* and_app, AInputEvent* event)
 	if (AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION)
 		return 0; 
 	
+	*/
 	
 	return 1; 
 }
@@ -398,29 +591,25 @@ void android_main(struct android_app *and_app)
 {
 	app_dummy();
 
+	int result = 0; 
+	
 	// Initialize the globals
 	init_globals();
+
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals());
 	
-	/* 
-	App *app = CreateApp();
-	get_globals()->app = app;
-	
-	g_android_app = and_app; 
+	globals->and_app = and_app; 
 	
 	Log::info("Create Application");
-
-	and_app->userData = app;
+	
+	App *android_app = CreateApp();
+	get_globals()->app = android_app; 
+	
+	and_app->userData = android_app;
 	and_app->onAppCmd = android_on_app_cmd;
 	and_app->onInputEvent = android_on_input_event; 
+
+	result = RunApp();
 	
-	int result = 0; 
-	if (app->init() == RESULT_OK)
-	{
-		result = app->run(); 
-	}
-	app->destroy(); 
-	
-	SAFE_DEL(app); 
-	
-	*/
+	DestroyApp(); 
 }

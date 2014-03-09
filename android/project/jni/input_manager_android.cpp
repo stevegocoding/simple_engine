@@ -17,7 +17,7 @@ void InputManagerAndroid::preupdate_frame()
 
 void InputManagerAndroid::update_frame()
 {
-	InputManagerAndroid::update_frame(); 
+	InputManager::update_frame(); 
 }
 
 void InputManagerAndroid::InputInfo::pre_update_frame()

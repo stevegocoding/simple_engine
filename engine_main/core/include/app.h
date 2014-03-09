@@ -72,8 +72,7 @@ struct GlobalsBase
 	{} 
 
 	virtual ~GlobalsBase()
-	{
-	}
+	{}
  
 	App *app; 
 };
