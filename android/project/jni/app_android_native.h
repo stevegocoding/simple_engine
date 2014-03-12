@@ -49,6 +49,7 @@ public:
 	virtual void update(); 
 	virtual int run(); 
 	virtual void present();
+	virtual bool on_event(const CoreEvent& e); 
 	
 	int create_context();
 	void destroy_context();

@@ -14,9 +14,8 @@ public:
 	virtual void preupdate_frame();
 	virtual void update_frame(); 
 	
-	
-	
-	
+	virtual GamePad& get_gamepad(int idx); 
+		
 private:
 	
 	struct InputInfo
@@ -33,7 +32,7 @@ private:
 		void touch_begin(int x, int y);
 		void touch_move(int x, int y);
 		void touch_end(int x, int y, int touch_id = -1); 
-
+		
 		AndroidController& get_controller() { return m_android_ctrl; } 
 		
 		unsigned int m_current_touch_id; 

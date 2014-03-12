@@ -111,6 +111,8 @@ private:
 class InputDevice
 {
 public: 
+	InputDevice();
+	virtual ~InputDevice();
 	
 	virtual bool presend_event(CoreEvent& event) { return true; }
 	virtual void reset_frame(); 

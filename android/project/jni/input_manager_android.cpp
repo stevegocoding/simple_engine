@@ -20,6 +20,11 @@ void InputManagerAndroid::update_frame()
 	InputManager::update_frame(); 
 }
 
+GamePad& InputManagerAndroid::get_gamepad(int idx)
+{
+	return m_input.get_controller(); 
+}
+
 void InputManagerAndroid::InputInfo::pre_update_frame()
 {
 	

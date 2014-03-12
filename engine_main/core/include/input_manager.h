@@ -8,6 +8,7 @@ struct NativeWndMsg
 {};
 
 class InputDevice; 
+class GamePad; 
 class InputManager 
 {
 public:
@@ -19,6 +20,8 @@ public:
 	virtual void update_frame(); 
 	
 	void add_updated_device(InputDevice *device); 
+	
+	virtual GamePad& get_gamepad(int idx) = 0;  
 
 	virtual void on_wnd_events(NativeWndMsg& wnd_msg) {}
 

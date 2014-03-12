@@ -7,6 +7,7 @@
 #include <android_native_app_glue.h>
 #include "app_android_native.h"
 #include "input_manager_android.h"
+#include "input_event.h"
 #include "log.h"
 
 GlobalsBasePtr g_globals;  
@@ -436,6 +437,33 @@ void AndroidNativeApp::_destroy_input_mgr()
 	SAFE_DEL(m_input_mgr);
 }
 
+bool AndroidNativeApp::on_event(const CoreEvent& e)
+{
+	switch (e.type)
+	{
+	case IET_TOUCHPAD_BEGAN:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			Log::info("Touch Began! x: %d, y: %d", touch_evt.m_point.x, touch_evt.m_point.y); 
+		}
+		break; 
+	case IET_TOUCHPAD_MOVED:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			Log::info("Touch Moved! x: %d, y: %d", touch_evt.m_point.x, touch_evt.m_point.y); 
+		}
+		break; 
+	case IET_TOUCHPAD_ENDED:
+		{
+			const TouchPadEvent& touch_evt = static_cast<const TouchPadEvent&>(e);
+			Log::info("Touch Ended! x: %d, y: %d", touch_evt.m_point.x, touch_evt.m_point.y);  
+		}
+		break; 
+	}
+	
+	return App::on_event(e);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -573,16 +601,75 @@ void android_on_app_cmd(struct android_app* app, int32_t cmd)
 }
 
 int32_t android_on_input_event(struct android_app* and_app, AInputEvent* event) 
-{
-	/*
-	AndroidNativeApp *app = static_cast<AndroidNativeApp*>(and_app->userData);
-	if (!app)
+{	
+	AndroidGlobalsPtr globals = cast_android_globals(get_globals()); 
+	if (globals->app == NULL)
 		return 0; 
 	
 	if (AInputEvent_getType(event) != AINPUT_EVENT_TYPE_MOTION)
 		return 0; 
 	
-	*/
+	const int action = AMotionEvent_getAction(event);
+	const int mask = (action & AMOTION_EVENT_ACTION_MASK); 
+	const int count = AMotionEvent_getPointerCount(event);
+	const int pointer_id = (action & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+
+	if (action == AMOTION_EVENT_ACTION_DOWN)
+	{
+		Log::info("------ACTION_DOWN---------");
+		globals->app->get_input_mgr()->get_gamepad(0).
+				raise_touch_event(IET_TOUCHPAD_BEGAN, 0, 
+						(int)AMotionEvent_getX(event, 0), 
+						(int)AMotionEvent_getY(event, 0));
+	}
+	
+	if (mask == AMOTION_EVENT_ACTION_POINTER_DOWN)
+	{
+		Log::info("------ACTION_POINTER_DOWN---------");
+		globals->app->get_input_mgr()->get_gamepad(0).
+				raise_touch_event(IET_TOUCHPAD_BEGAN, pointer_id, 
+						(int)AMotionEvent_getX(event, pointer_id), 
+						(int)AMotionEvent_getY(event, pointer_id));
+	}
+	
+	if (action == AMOTION_EVENT_ACTION_MOVE)
+	{
+		Log::info("------ACTION_MOVE---------");
+		for (int i = 0; i < count; ++i)
+		{
+			const int id = AMotionEvent_getPointerId(event, i);
+			const int x = (int)AMotionEvent_getX(event, id); 
+			const int y = (int)AMotionEvent_getY(event, id); 
+		
+			Log::info("------ACTION_MOVE for loop id %d: %dx%d ---------", id, x, y);
+			globals->app->get_input_mgr()->get_gamepad(0).
+					raise_touch_event(IET_TOUCHPAD_MOVED, id, x, y);
+		}
+	}
+	
+	if (mask == AMOTION_EVENT_ACTION_POINTER_UP)
+	{
+		Log::info("------ACTION_POINTER_UP pointerId %d---------", pointer_id);
+		globals->app->get_input_mgr()->get_gamepad(0).
+				raise_touch_event(IET_TOUCHPAD_ENDED, 
+						pointer_id, 
+						(int)AMotionEvent_getX(event, pointer_id), 
+						(int)AMotionEvent_getY(event, pointer_id));
+	}
+	
+	if (action == AMOTION_EVENT_ACTION_UP)
+	{
+		Log::info("------ACTION_UP---------");
+		for (int i = 0; i < count; ++i)
+		{
+			const int id = AMotionEvent_getPointerId(event, i); 
+			globals->app->get_input_mgr()->get_gamepad(0).
+					raise_touch_event(IET_TOUCHPAD_ENDED, 
+							id, 
+							(int)AMotionEvent_getX(event, id), 
+							(int)AMotionEvent_getY(event, id));
+		}
+	}
 	
 	return 1; 
 }

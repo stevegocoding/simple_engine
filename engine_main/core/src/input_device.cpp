@@ -201,6 +201,16 @@ void Cursor::update_frame(bool is_visible, short x, short y)
 
 ////////////////////////////////////////////////////////////////////////// 
 
+InputDevice::InputDevice()
+{
+	
+}
+
+InputDevice::~InputDevice() 
+{
+	
+}
+
 void InputDevice::reset_frame()
 {
 	// Reset all buttons
@@ -233,6 +243,7 @@ void InputDevice::update_cursor(uint idx, int x, int y)
 ////////////////////////////////////////////////////////////////////////// 
 
 Mouse::Mouse()
+	: m_wheel(0.0f)
 {
 	// .Set(GLF_ASIZEOF(mButtons), mButtons);
 	for (int i = 0; i < BTN_COUNT; ++i)
